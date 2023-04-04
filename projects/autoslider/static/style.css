@@ -1,0 +1,68 @@
+/* 메인페이지 스타일 시트 */
+#logo_div {
+    text-align:center;
+}
+
+#logo_img {
+    position:relative;
+    top:200px;
+    width:200px;
+    height:100px;
+}
+
+#board_div {
+    text-align:center;
+    position:relative;
+    top:200px;
+}
+
+#id_div, #password_div{
+    width:300px;
+    margin:auto;
+    position:relative;
+    top:250px;
+}
+
+#id_span {
+    width:90px;
+}
+
+#login_div {
+    text-align:center;
+}
+
+#login_button {
+    display:inline-block;
+    position:relative;
+    left:220px;
+    top:165px;
+}
+
+#signup_div {
+    text-align:center;
+}
+
+#signup_button {
+    position:relative;
+    top:200px;
+}
+
+#footer_div {
+    position:relative;
+    top:370px;
+}
+
+#footer_font {
+    text-align:center;
+    font-size:12px;
+}
+
+#footer_Copyright {
+    text-align:center;
+}
+
+#init_div {
+    text-align:center;
+    position:relative;
+    top:200px;
+}

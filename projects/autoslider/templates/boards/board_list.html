@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% block content %}
+<!-- S: board_list.html --><!-- 해당 페이지는 login한 유저만 들어올 수 있도록 view에서 처리됨. -->
+{% load static %}
+{% include "navbar.html" %}
+<section class="board_list container-fluid">
+{{ request.resolver_match.url_name }}
+{% if  request.resolver_match.url_name == 'board_list' %}
+  <h2>메인 보드</h2>
+  {% if board_list %}
+  board_list 있음 : {{ board_list }}
+    {% for board in board_list %}
+    <h3>{{ board.name }}</h3>
+    <p>{{ board.description }}</p>
+    {% endfor %}
+  {% else %}
+  빈 목록 - 메인보드
+  {% endif %}
+{% elif request.resolver_match.url_name == 'favorite_board_list' %}
+<h2>즐겨찾기</h2>
+  {% if favorite_board_list %}
+    {% for board_fav in favorite_board_list %}
+      {% if board_fav.favorite %}
+      <h3>{{ board_fav.name }}</h3>
+      <p>{{ board_fav.description }}</p>
+      {% endif %}
+    {% endfor %}
+  {% else %}
+  빈 목록 - 즐겨찾기
+  {% endif %}
+{% endif %}
+</section>
+<footer class="footer bg-light">
+  <div class="rows">
+      <div class="rights">
+          <p class="copyright">Copyright @ AutoSlider Since 2022</p>
+      </div>
+      <ul class="info">
+          <li><strong>팀명 :</strong>팀_안드</li>
+          <li><strong>서비스 문의 :</strong><a href="mailto:admin@autoslider.com" class="mailto">admin@autoslider.com</a></li>
+      </ul>
+      <ul class="links">
+          <li><a class="btn btn-outline-light btn-floating m-1" href="https://github.com/AutoSlider/total" target="_blank" role="button"><img src="{% static 'img/icons/github-mark.png' %}" alt="gitHub linke"></a></li>
+          <li><a href="#" target="_blank"><a class="btn btn-outline-light btn-floating m-1" href="mailto:admin@autoslider.com" target="_blank" role="button"><img src="{% static 'img/icons/email.png' %}" alt="mail"></a></li>
+      </ul>
+  </div>
+</footer>
+<!-- 새 보드 만들기 내부 팝업 -->
+<div class="modal fade file-upload" id="newBoardModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content modal_popup">
+        <div class="modal-header">
+            <h4 class="modal-title hide">새 보드 만들기</h4>
+            <button type="button" class="fa fa-close closeBtn" data-dismiss="modal" aria-hidden="true">
+                <strong class="modal hide">닫기</strong>
+            </button>
+        </div>
+        <form id="newBoardForm" method="post" action="{% url 'boards:board_create' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          {% include "form_errors.html" %}
+          <div class="modal-body">
+            <!-- select 태그 추가 -->
+            <div class="select_type">
+                <label for="selectInput">입력 방법에 대해 선택해 주세요.</label>
+                <select id="selectInput" class="form-control input_type" name="input_type">
+                  <option value="input_text">텍스트 요약</option>
+                  <option value="input_youtube">Youtube 영상 링크 입력</option>
+                  <option value="input_video">영상 파일 업로드</option>
+                </select>
+            </div>
+            <div class="form-group input_text">
+                <label for="input_text" class="modal">텍스트 요약:</label>
+                <div class="inputarea">
+                  <textarea class="form-control" id="input_text" name="input_text" placeholder="요약할 텍스트를 입력해주세요." cols="30" rows="10"></textarea>
+                </div>
+            </div>
+            <div class="form-group input_youtube">
+                <label for="input_youtube" class="modal hide">Youtube 영상 링크 입력:</label>
+                <div class="inputarea">
+                  <input type="text" class="form-control" id="input_youtube" name="input_youtube" placeholder="유튜브 링크 입력하기" onblur="validateYoutubeLink()" />
+                </div>
+                <strong class="youtube_validation_msg"></strong>
+            </div>
+            <div class="form-group input_video">
+                <label for="input_video"><span><strong class="fa fa-plus"></strong><p>내 파일을 클릭하세요</p><p>자신이 원하는 mp4영상을 추가하세요</p></span></label>
+                <div class="inputarea">
+                  <input type="file" class="form-control-file" id="input_video" name="input_video" />
+                </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+              <ul class="btnarea">
+                  <li><button type="submit" class="btn btn-primary">적용하기</button></li>
+                  <li><button type="button" class="btn btn-default closeBtn" data-dismiss="modal">취소</button></li>
+              </ul>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- # newBoard JavaScript -->
+<script type="text/javascript" >
+  // youtube link validator
+  function validateYoutubeLink() {
+    console.log("validateYoutubeLink raise");
+    const youtubeInput = $("#input_youtube").val();
+    const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)\/(watch\?v=|embed\/|v\/|.+\?v=)?([^&=%\?]{11})/;
+    // /^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+$/;
+
+    var css_conf = {
+      "display":"block",
+      "width": "100%",
+      "padding": "10px",
+      "font-weight": "bold"
+    };
+    $(".youtube_validation_msg").css(css_conf);
+    if (youtubeRegex.test(youtubeInput)) {
+        console.log(youtubeInput, "Valid");
+        $(".youtube_validation_msg").text("해당 유튜브 링크가 적절한 포맷입니다.");
+        $(".youtube_validation_msg").css({"color": "green"});
+    } else {
+        console.log(youtubeInput, "Invalid");
+        $(".youtube_validation_msg").text("해당 유튜브 링크 포맷이 적절하지 않습니다.");
+        $(".youtube_validation_msg").css({"color": "red"});
+    };
+  };
+  $("#input_youtube").on("change", validateYoutubeLink);
+  $(document).ready(function() {
+    console.log("board_list raise");
+
+    $("#newBoardBtn").on('click', function () {
+      $("#newBoardForm")[0].reset();
+      $(".form-group").hide();
+      // 첫번째 선택 되도록
+      $(".form-group").first().show();
+      $("#selectInput option:eq(0)").prop("selected",true);
+      $("#newBoardModal").modal("show");
+    });
+    $("#selectInput").on("change", function() {
+      // var selectedValue = $(this).val();
+      var selected = $(this).val();
+      console.log(selected);
+      $(".form-group:not(.input_" + selected).hide();
+      $(".form-group:not(.input_" + selected+" .inputarea").children().val("");
+      $("div."+selected).show();
+      $(selected).show();
+      console.log($(selected).children().val());
+    });
+    $("#newBoardForm").submit(function() {
+      var inputFilled = false;
+      $(".inputarea").each(function() {
+        var inputVal = $.trim($(this).find("input, textarea").val());
+        if (inputVal) { inputFilled = true; }
+      });
+      if (!inputFilled) {
+        // alert('Please enter at least one input value.");
+        return false;
+      }
+    });
+    $(".closeBtn").on("click", function() {
+      $("#newBoardModal").modal("hide");
+      $("#newBoardForm")[0].reset();
+      $(".form-group").hide();
+      // 첫번째 선택 되도록
+      $(".form-group").first().show();
+      $("#selectInput option:eq(0)").prop("selected",true);
+    });
+  });
+</script>
+<!-- E: board_list.html -->
+{% endblock %}

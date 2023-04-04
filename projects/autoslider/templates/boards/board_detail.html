@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h1>{{ object.title }}</h1>
+<p>{{ object.input_type }}</p>
+{% if object.input_type == "input_text" %}
+    <p>object.input_text:<br>{{ object.input_text }}</p>
+{% endif %}
+{% if object.input_type == "input_youtube" %}
+    <p>{{ object.input_youtube.title }}</p>
+    <div>input_youtube.input_text:<br>{{ object.input_text }}</div>
+    <div>input_youtube.summary_text:<br>{{ object.summary_text }}</div>
+{% endif %}
+{% if object.input_type == "input_video" %}
+    <video width="320" height="240" controls>
+        <source src="{{ object.input_video.url }}" type="video/mp4">
+    </video>
+{% else %}
+    <p class="red">Your browser does not support the video tag.</p>
+{% endif %}
+<script type="text/javascript" src="{% static 'js/VideoTrace.js' %}"></script>
+{% endblock %}

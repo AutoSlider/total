@@ -1,0 +1,44 @@
+// modal popup control
+    function showNewBoardModal() {
+      var newBoardForm = $("#newBoardForm");
+      $(".inputarea").children().val("");
+      $(".form-group").hide();
+      // to be first selected
+      $(".input_text").show();
+      $("#selectInput option:eq(0)").prop("selected",true);
+      $("#newBoardModal").modal("show");
+    }
+    $("#newBoardBtn").on("click", showNewBoardModal);
+
+    $("#selectInput").on("change", function() {
+      // var selectedValue = $(this).val();
+      var selected = $(this).val();
+      console.log(selected);
+      $(".form-group:not(.input_" + selected).hide();
+      $(".form-group:not(.input_" + selected+" .inputarea").find("input, textarea").val("").text("");
+      $("div."+selected).show();
+      $(selected).show();
+      console.log($(selected+" .inputarea").val());
+    });
+    $(".closeBtn").on("click", function() {
+      $("#newBoardModal").modal("hide");
+      // $("#newBoardForm")[0].reset();
+      $(".inputarea").find("input, textarea").val("").text("");
+      $("div."+selected).show();
+      $(".form-group").hide();
+      // 첫번째 선택 되도록
+      $(".form-group").first().show();
+      $("#selectInput option:eq(0)").prop("selected",true);
+    });
+
+    $('.form-control-file').change( function() {
+      var this_val = $(this).val();
+      if(window.FileReader){  // modern browser
+        var filename = $(this)[0].files[0].name;
+      }else {  // old IE
+        var filename = $(this).val().split('/').pop().split('\\').pop();  // 파일명만 추출
+      }
+      $('.uploadchk').text(filename+' 파일 업로드 확인 되었습니다.')
+    });
+
+    $("#input_youtube").on("change", validateYoutubeLink);

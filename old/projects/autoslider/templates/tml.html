@@ -1,0 +1,27 @@
+<section class="boardlist">
+    {% if request.resolver_match.url_name is None or request.resolver_match.url_name == 'board_list' %}
+    <h2>메인 보드</h2>
+      {% if all_boards %}
+        {% for board in all_boards %}
+        <h3>{{ board.name }}</h3>
+        <p>{{ board.description }}</p>
+        <hr>
+        {% endfor %}
+      {% else %}
+      빈 목록 - 메인보드
+      {% endif %}
+    {% elif request.resolver_match.url_name == 'favorite_board_list' %}
+    <h2>즐겨찾기</h2>
+      {% if all_boards %}
+        {% for board_fav in all_boards %}
+          {% if board_fav.favorite %}
+          <h3>{{ board_fav.name }}</h3>
+          <p>{{ board_fav.description }}</p>
+          <hr>
+          {% endif %}
+        {% endfor %}
+      {% else %}
+        빈 목록 - 즐겨찾기
+      {% endif %}
+    {% endif %}
+    </section>

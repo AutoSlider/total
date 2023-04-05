@@ -118,6 +118,7 @@
   </div>
   {% endif %}
 </section>
+<!--
 <footer class="footer bg-light">
   <div class="rows">
     <div class="rights"><p class="copyright">Copyright @ AutoSlider Since 2022</p></div>
@@ -131,6 +132,7 @@
     </ul>
   </div>
 </footer>
+-->
 <!-- S: 새 보드 만들기 Modal popup-->
 <section id="newBoardModal" class="modal fade file-upload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
@@ -140,7 +142,7 @@
         <button type="button" class="fa fa-close closeBtn" data-dismiss="modal" aria-hidden="true"><strong class="modal hide">닫기</strong></button>
       </div>
       <div class="modal-body">
-        <form id="newBoardForm" method="post" action="{% url 'boards:board_create' %}" onsubmit="console.log('newBoardForm submitted')">
+        <form id="newBoardForm" method="post" action="{% url 'boards:board_create' %}" onsubmit="consol.log('newBoardForm submitted')" enctype="multipart/form-data">
         {% csrf_token %}
         {% include "form_errors.html" %}
           <!-- 입력 방법 -->
@@ -177,7 +179,7 @@
           </div>
           <div class="modal-footer">
             <ul class="btnarea">
-              <li><button type="submit" form="newBoardForm" class="btn btn-primary" onclick="console.log('newBoardForm submit button clicked')">적용하기</button></li>
+              <li><button id="modalSubmit" type="submit" form="newBoardForm" class="btn btn-primary">적용하기</button></li>
               <li><button type="button" class="btn btn-secondary closeBtn" data-dismiss="modal">취소</button></li>
             </ul>
           </div>
@@ -186,8 +188,21 @@
     </div>
   </div>
 </section>
+<!-- Loading Progess Animation -->
+<div class="loading-container">
+  <div class="loading"></div>
+  <div id="loading-text">진행 중!</div>
+</div>
 <!-- Modal popup JavaScript -->
 <script type="text/javascript" >
+  // Progess Animation
+  function progrssStart(){
+    alert('progrssStart raise');
+    $("body").attr("class","progress");
+    $(".loading-container").addClass("on");
+
+  }
+  $("#modalSubmit").on("click", progrssStart);
   function showNewBoardModal() {
     var newBoardForm = $("#newBoardForm");
     //console.log("showNewBoardModal() raise!");
@@ -200,15 +215,23 @@
   }
   $("#newBoardBtn").on("click", showNewBoardModal);
 
-  // file valid check
-  $('.form-control-file').change( function() {
-    var this_val = $(this).val();
-    if(window.FileReader){  // modern browser
-      var filename = $(this)[0].files[0].name;
-    }else {  // old IE
-      var filename = $(this).val().split('/').pop().split('\\').pop();  // 파일명만 추출
-    }
-    $('.uploadchk').text(filename+' 파일 업로드 확인 되었습니다.').css("color", "blue");
+  // selectType()
+  function selectType(){
+    var selected = $("#selectInput").val();
+    var selectedIndexNum = $("#selectInput").prop('selectedIndex');
+    $(".opt").hide();
+    $(".youtube_validation_msg").text("");
+    $(`.opt:eq(${selectedIndexNum})`).show();
+    $(".opt").not(`:eq(${selectedIndexNum})`).find('.selected_input').val("").text("");
+  };
+
+  // close
+  $(".closeBtn").on("click", function() {
+    console.log('.closeBtn onclick raise')
+    $(".opt").hide();
+    $(".youtube_validation_msg").text("");
+    $(".opt").find('.selected_input').val("").text("");
+    $("#newBoardModal").modal("hide");
   });
 
   // youtube link validator
@@ -235,23 +258,17 @@
     };
   };
 
-  // selectType()
-  function selectType(){
-    var selected = $("#selectInput").val();
-    var selectedIndexNum = $("#selectInput").prop('selectedIndex');
-    $(".opt").hide();
-    $(".youtube_validation_msg").text("");
-    $(`.opt:eq(${selectedIndexNum})`).show();
-    $(".opt").not(`:eq(${selectedIndexNum})`).find('.selected_input').val("").text("");
-  };
-
-  // close
-  $(".closeBtn").on("click", function() {
-    console.log('.closeBtn onclick raise')
-    $(".opt").hide();
-    $(".youtube_validation_msg").text("");
-    $(".opt").find('.selected_input').val("").text("");
+  // file valid check
+  $('.form-control-file').change( function() {
+    var this_val = $(this).val();
+    if(window.FileReader){  // modern browser
+      var filename = $(this)[0].files[0].name;
+    }else {  // old IE
+      var filename = $(this).val().split('/').pop().split('\\').pop();  // 파일명만 추출
+    }
+    $('.uploadchk').text(filename+' 파일 업로드 확인 되었습니다.').css("color", "blue");
   });
+
 </script>
 <!-- E: 새 보드 만들기 Modal popup-->
 <!-- E: board_list.html -->

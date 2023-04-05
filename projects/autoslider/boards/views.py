@@ -11,7 +11,7 @@ from django.conf import settings
 from django.db.models import Q
 
 from .models import Board
-from .forms import BoardCreateForm, BoardNoteForm
+from .forms import BoardCreateForm# , BoardNoteForm
 
 import os
 import json
@@ -25,18 +25,15 @@ from transformers import PreTrainedTokenizerFast, BartForConditionalGeneration
 
 # error log
 import logging
-
-#logging.basicConfig(level=logging.DEBUG)
+# logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
-
 def my_view(request):
     logger.info('boards/views.py Log start!')
 
 
 # Create your views here.
 
-# BoardListView
-# 모든 보드 목록
+# BoardListView # 모든 보드 목록
 # LoginRequiredMixin을 상속받아 로그인한 사용자만 접근할 수 있도록 설정
 class BoardListView(LoginRequiredMixin, ListView):
     model = Board
@@ -49,7 +46,7 @@ class BoardListView(LoginRequiredMixin, ListView):
         query = self.request.GET.get('q')
         if query:
             return Board.objects.filter(
-                Q(title__icontains=query) | Q(note__icontains=query) | Q(total_text__icontains=query) | Q(summary_text__icontains=query),
+                Q(title__icontains=query) | Q(total_text__icontains=query) | Q(summary_text__icontains=query), # Q(note__icontains=query) | 
                 user_id=self.request.user.id
             )
         else:
@@ -77,7 +74,7 @@ class FavoriteBoardListView(BoardListView):
         query = self.request.GET.get('q')
         if query:
             queryset = queryset.filter(
-                Q(title__icontains=query) | Q(note__icontains=query) | Q(total_text__icontains=query) | Q(summary_text__icontains=query)
+                Q(title__icontains=query) | Q(total_text__icontains=query) | Q(summary_text__icontains=query), #  | Q(note__icontains=query)
             )
         return queryset
 
@@ -115,7 +112,7 @@ def modifiy_favorite(request, pk):
 class BoardDetailView(LoginRequiredMixin, DetailView):
     model = Board
     template_name = 'boards/board_detail.html'
-    form_class = BoardNoteForm  # BoardCreateForm
+    # form_class = BoardNoteForm  # BoardCreateForm
     # success_url = reverse_lazy('board_detail')
 
     # 로그인한 사용자와 요약 작성자가 일치하지 않으면 에러 페이지 반환
@@ -132,6 +129,12 @@ class BoardDetailView(LoginRequiredMixin, DetailView):
     def get_success_url(self):
         return reverse('boards:board_detail', kwargs={'pk': self.object.pk})
 
+# 보드 수정
+# def post_form(request, board_id):
+#     board = get_object_or_404(Board, pk=board_id)
+#     note, created = Note.objects.get_or_create(board=board)
+#     context = {'board': board, 'note': note}
+#     return render(request, 'notes/post_form.html', context)
 
 # 보드 삭제
 class BoardDeleteView(LoginRequiredMixin, View):
@@ -248,17 +251,7 @@ class BoardCreateView(LoginRequiredMixin, CreateView):
     form_class = BoardCreateForm
     template_name = "boards/board_form.html"
 
-    def post(self, request, *args, **kwargs):
-        logger.info('BoardCreateForm form_valid called!')
-        logger.debug('Debugging information')
-        form = self.get_form()
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
 
-
-    # def form_validated(self, form):
     def form_valid(self, form):
         logger.info('BoardCreateForm form_valid called!')
         logger.debug('Debugging information')
@@ -280,7 +273,7 @@ class BoardCreateView(LoginRequiredMixin, CreateView):
         # Handle YouTube links
         input_youtube = form.cleaned_data['input_youtube']
         if input_youtube:
-
+            print(f'\n\nform.cleaned_data["input_youtube"] -> input_youtube : {input_youtube} Success!!\n\n')
             # 동영상 다운로드를 위한 경로 설정
             VIDEO_DIR = os.path.join(settings.MEDIA_ROOT, 'youtube/')
             if not os.path.exists(VIDEO_DIR):
@@ -325,7 +318,6 @@ class BoardCreateView(LoginRequiredMixin, CreateView):
             device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
             whispermodel = whisper.load_model("small", device=device)
             result = whispermodel.transcribe(file_path)
-            # original_text = result["text"]
             segments = result["segments"]
             # Board 인스턴스에 저장.
             board.title = file_path.split('\\')[-1] # youtube.title
@@ -334,6 +326,7 @@ class BoardCreateView(LoginRequiredMixin, CreateView):
             board.timeline_text = create_timelined_text(segments)
             board.input_video = input_video # 업로드한 파일
             board.save()
+            print('input_video board save')
 
             # 업로드 된 파일 삭제
             default_storage.delete(file_path)
@@ -342,7 +335,7 @@ class BoardCreateView(LoginRequiredMixin, CreateView):
             return redirect(redirect_url)
 
         success_url = reverse('boards:board_list')
-        logger.info(f'Redirecting to success_url -> {success_url}')
+        # logger.info(f'Redirecting to success_url -> {success_url}')
         return super().form_valid(form)
 
     def get_success_url(self):

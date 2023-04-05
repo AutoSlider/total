@@ -42,10 +42,7 @@ INSTALLED_APPS = [
     'common',
     'boards.apps.BoardsConfig', # boards
     'bootstrap4', # bootstrap4
-    # 'common.apps.CommonConfig', # common
-    # 'whisper.apps.WhisperConfig', # whisper -> 삭제
-    # 'phonenumber_field', # phone-number-validator
-    # 'widget_tweaks', # phone-number-validator -> form
+    'markdownx', # markdown
 ]
 
 MIDDLEWARE = [
@@ -71,9 +68,11 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media', # media
             ],
             'libraries': {
-                # 'custom_tags': 'care.templatetags.care_template',  # care/templatetags/care_template.py
+                'custom_filters': 'boards.templatetags.custom_filters',
+                # boards/templatetags/custom_filters.py
             }
         },
     },
@@ -134,6 +133,7 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',  # static 안에 일괄 파일 처리 시
 ]
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
 # Default primary key field type
@@ -160,9 +160,10 @@ AUTH_USER_MODEL ='common.CustomUser'
 
 # MEDIA 미디어 처리
 # import os 맨 위로 옮김
-MEDIA_URL = '/media/'  # MEDIA_URL은 파일이 서비스될 URL을 설정하는데 사용됨.
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # MEDIA_URL은 파일이 서비스될 URL을 설정하는데 사용됨.
 # autoslider 바로 아래에 생성함.
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # MEDIA_ROOT는 파일이 저장될 경로를 설정하는데 사용
+
 
 # Error log 확인
 LOGGING = {

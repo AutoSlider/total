@@ -25,16 +25,15 @@
     {% if object.input_type == "input_text" %}
     <div class="input_text">
         <h4 class="txt_tit">{{ object.title }} 에 작성된 텍스트의 전문/요약문입니다.</h4>
-        <div id="wholeText" class="textSection">
+        <div class="textSection wholeText">
             <div class="toggleBtn">
-                <label class="switch">
+                <label for="toogleText" class="switch">
                     <input type="checkbox" id="toggleText" />
                     <span class="slider round"></span>
                 </label>
                 <span class="opt total_text on">전문</span><span class="opt summary_text">요약문</span>
             </div>
-            <div class="content on">{{ object.total_text|linebreaks }}</div>
-            <div class="content ">{{ object.summary_text|linebreaks }}</div>
+            <div class="content">{{ object.total_text }}</div>
         </div>
         <div class="notearea">
             note area 추가 예정
@@ -43,23 +42,19 @@
     {% elif object.input_type == "input_youtube" %}
     <div class="videos">
         <h4>{{ object.title }}</h4>
-        <div class="videoSection">
-            <div id="player"></div>
-            <div id="timeline"></div>
+        <div id="player" class="videoSection"></div>
+        <div id="timeline">
+            
         </div>
         <div class="textSection">
-            <div class="txt">
-                <div class="toggleBtn">
-                    <label class="switch">
-                        <input type="checkbox" id="toggleText" />
-                        <span class="slider round"></span>
-                    </label>
-                    <span class="opt total_text on">전문</span><span class="opt summary_text">요약문</span>
-                </div>
-                <div class="content on">{{ object.total_text|linebreaks }}</div>
-                <div class="content ">{{ object.summary_text|linebreaks }}</div>
+            <div class="toggleBtn">
+                <label class="switch">
+                    <input type="checkbox" id="toggleText" />
+                    <span class="slider round"></span>
+                </label>
+                <span class="opt total_text on">전문</span><span class="opt summary_text">요약문</span>
             </div>
-            <div class="notes"></div>
+            <div class="content">{{ object.total_text }}</div>
         </div>
     </div>
     {% elif object.input_type == "input_video" %}
@@ -79,8 +74,7 @@
                 </label>
                 <span class="opt total_text on">전문</span><span class="opt summary_text">요약문</span>
             </div>
-            <div class="content on">{{ object.total_text|linebreaks }}</div>
-            <div class="content ">{{ object.summary_text|linebreaks }}</div>
+            <div class="content">{{ object.total_text }}</div>
         </div>
     </div>
     {% endif %}
@@ -88,49 +82,25 @@
 </section>
 <!-- html iframe 으로 youtube video 삽입 -->
 <script type="text/javascript">
-function youtubeUrlValidation(url) {
-    const youtubeRegex = /(https?:\/\/)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)\/(watch\?v=|embed\/|v\/|.+\?v=)?([^&=%\?]{11})/;
-    const youtubeRegexMatch = url.match(youtubeRegex);
-    if (youtubeRegexMatch) { return youtubeRegexMatch[6]; }
-    return null;
-}
-// 유튜브 API를 비동기적으로 로드합니다.
-var tag = document.createElement('script');
-tag.src = "https://www.youtube.com/iframe_api";
-var firstScriptTag = document.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-var player;
-var done = false;
-function stopVideo() { player.stopVideo(); }
-function onPlayerReady(event) { event.target.playVideo(); }
-function onPlayerStateChange(event){
-    if (event.data === 0) {
-        stopVideo()
-        done = true; } }
-function onYouTubeIframeAPIReady() {
-    player = new YT.Player('player', {
-        height: '325',
-        width: '525',
-        videoId: youtubeUrlValidation("{{ object.input_youtube }}"),
-        playerVars: {
-        'playsinline': 1
-        },
-        events: {
-        //'onReady': onPlayerReady,  // 새로고침 시 자동재생 안 되도록 주석 처리
-        'onStateChange': onPlayerStateChange
-        }
-    });
-}
-
 $(document).ready(function(){
-    // toggle button for total <-> summary
+    //check page loaded
+    console.log("board_detail load!");
+    var wholeText_content = $(".wholeText .content");
+    wholeText_content.css("background-color","#000be0");
+    wholeText_content.text("{{ object.summary_text }}");
+    wholeText_content.text("{{ object.title }}");
     var content = $(".textSection .content");
     var check = $("#toggleText");
     check.on('click', (event) => {
         $(".opt").toggleClass("on");
-        content.toggleClass("on");
+        if ($(".total_text").hasClass("on")){
+            content.text("");
+            content.text("{{ object.total_text }}");
+        } else{
+            content.text("");
+            contenttext("{{ object.summary_text }}");
+        }
     });
-
 });
 </script>
 {% endblock %}

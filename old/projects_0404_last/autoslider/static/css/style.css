@@ -271,7 +271,6 @@ display: inline-block;
 }
 
 .detail_content .textSection .content {
-    display: none;
     overflow-y: scroll;
     height: 200px;
     padding: 20px;
@@ -279,19 +278,17 @@ display: inline-block;
     font-size: 14px;
 }
 
-.detail_content .textSection .content.on {display: block;}
-
 .board_detail .input_text h4.txt_tit {
     margin-bottom: 20px;
 }
 
-.detail_content #wholeText {
+.detail_content .wholeText {
     clear: both;
     float: none;
     width: 100%;
 }
 
-.input_text #wholeText {
+.input_text .wholeText {
     height: 270px;
 }
 

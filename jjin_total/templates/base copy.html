@@ -1,0 +1,128 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" href="{% static 'img/icons/png/autoslider_logo.png' %}" type="image/x-icon">
+        <!-- google web font -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap">
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <!-- custom CSS -->
+        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+        <!-- jquery-3.6.3.min.js -->
+        <script type="text/javascript" src="{% static 'js/jquery-3.6.3.min.js' %}"></script>
+        <!-- bootstrap.min.js -->
+        <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+        <!-- custom.js -->
+        <script type="text/javascript" src="{% static 'js/custom.js' %}"></script>
+        <title>AutoSlider</title>
+    </head>
+    <body>
+        <section class="base container-fluid">
+            {% if request.resolver_match.url_name is None or request.resolver_match.url_name == 'board_list' or request.resolver_match.url_name == 'favorite_board_list' and user.is_authenticated %}
+            <!-- navbar -->
+            {% include "navbar.html" %}
+            <!-- header -->
+            <header class="header">
+                <h1 class="logo"><img src="{% static 'img/autoslider_logo.png' %}" alt="logo"></h1>
+                <ul class="btnare">
+                    <li><button id="newBoardBtn" class="btn btn-primary"><strong class="fa fa-plus" data-toggle="modal" data-target="newBoardModal">새로 만들기</strong></button></li>
+                </ul>
+            </header>
+            {% endif%}
+            <!-- 기본 템플릿 안에 삽입될 내용 Start -->
+            {% block content %}
+            {% endblock %}
+            <!-- 기본 템플릿 안에 삽입될 내용 End -->
+        </section>
+        <footer class="footer bg-light">
+            <div class="rows">
+                <div class="rights">
+                    <p class="copyright">Copyright @ AutoSlider Since 2022</p>
+                </div>
+                <ul class="info">
+                    <li><strong>팀명 :</strong>팀_안드</li>
+                    <li><strong>서비스 문의 :</strong><a href="mailto:admin@autoslider.com" class="mailto">admin@autoslider.com</a></li>
+                </ul>
+                <ul class="links">
+                    <li><a class="btn btn-outline-light btn-floating m-1" href="https://github.com/AutoSlider/total" target="_blank" role="button"><img src="{% static 'img/icons/github-mark.png' %}" alt="gitHub linke"></a></li>
+                    <li><a href="#" target="_blank"><a class="btn btn-outline-light btn-floating m-1" href="mailto:admin@autoslider.com" target="_blank" role="button"><img src="{% static 'img/icons/email.png' %}" alt="mail"></a></li>
+                </ul>
+            </div>
+        </footer>
+        <!-- 새 보드 만들기 내부 팝업 -->
+        <div class="modal fade file-upload" id="newBoardModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title hide">새 보드 만들기</h4>
+                        <button type="button" class="closeBoardBtn close fa fa-close" data-dismiss="modal" aria-hidden="true">
+                            <strong class="modal hide">닫기</strong>
+                        </button>
+                    </div>
+                    <form id="newBoardForm" method="post" action="">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <!-- select 태그 추가 -->
+                            <div class="form-group select_type">
+                                <label for="selectInput" class="modal">입력 방법 선택:</label>
+                                <select id="selectInput" class="form-control input_type" name="input_type">
+                                    <option value="input_text">텍스트 요약</option>
+                                    <option value="input_youtube">Youtube 영상 링크 입력</option>
+                                    <option value="input_video">영상 파일 업로드</option>
+                                </select>
+                            </div>
+                            <div class="form-group input_text">
+                                <label for="input_text" class="modal">텍스트 요약:</label>
+                                <input type="text" class="form-control" id="input_text" name="input_text" placeholder="요약할 텍스트를 입력해주세요.">
+                            </div>
+                            <div class="form-group input_youtube">
+                                <label for="input_youtube" class="modal hide">Youtube 영상 링크 입력:</label>
+                                <input type="text" class="form-control" id="input_youtube" name="input_youtube" placeholder="유튜브 링크 입력하기">
+                            </div>
+                            <div class="form-group input_video">
+                                <label for="input_video">
+                                    <input type="file" class="form-control-file" id="input_video" name="input_video">
+                                    <span><strong class="fa fa-plus"></strong><p>내 파일을 클릭하세요</p><p>자신이 원하는 mp4영상을 추가하세요</p></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <ul class="btnarea">
+                                <li><button type="submit" class="btn btn-primary">적용하기</button></li>
+                                <li><button type="button" class="btn btn-default closeBoardBtn" data-dismiss="modal" onclick="resetForm()">취소</button></li>
+                            </ul>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- # newBoard JavaScript -->
+        <script type="text/javascript" >
+            $(document).ready(function() {
+                $('#newBoardBtn').on('click', function () {
+                    $('#newBoardModal').modal('show');
+                });
+                $('.closeBoardBtn').on('click', function () {
+                    $('#newBoardModal').modal('hide');
+                    $('#newBoardForm')[0].reset();
+                    $('.form-group').hide();
+                    $('#selectInput').val('');
+                  });
+                $('#selectInput').on('change', function() {
+                    var selectedValue = $(this).val();
+                    $('.input_' + selectedValue).show();
+                    $('.form-group:not(.input_' + selectedValue + ') input, .form-group:not(.input_' + selectedValue + ') select').val('');
+                    $('.form-group:not(.input_' + selectedValue + ')').hide();
+                });
+            });
+        </script>
+    </body>
+</html>

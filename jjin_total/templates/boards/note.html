@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+<!-- boards/note.html -->
+boards/note.html
+{% endblock %}
+
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<section class="board_detail {{ object.input_type }}">
+    <div class="toparea">
+        <h3 class="tit">{{ object.title }}</h3>
+        <ul class="btnarea">
+            {% if object.input_type != "input_text" %}
+            <li><a href="#" class="btn btn-primary">스크랩 찾기</a></li>
+            {% endif %}
+            <li>
+                <form method="post" id="fav_modify" action="{% url 'boards:modifiy_favorite' object.pk %}">
+                    {% csrf_token %}
+                    {% include "form_errors.html" %}
+                    <button type="submit" form="fav_modify" class="btn btn-primary">
+                        {% if object.favorite %} 즐겨찾기 삭제 {% else %} 즐겨찾기 추가 {% endif%}
+                    </button>
+                </form>
+            </li>
+            <li><a href="#" class="btn btn-primary">저장하기</a></li>
+            <li class="goback"><a href="{% url 'boards:board_list' %}">목록으로 돌아가기</a></li>
+        </ul>
+    </div>
+    <div class="detail_content">
+        <div class="videos">
+            <h4>{{ object.title }}</h4>
+            <div class="videoSection">
+                <div id="player"></div>
+                <div id="timeline">timeline</div>
+            </div>
+            <div class="textSection">
+                <div class="txt">
+                    <div class="toggleBtn">
+                        <label class="switch">
+                            <input type="checkbox" id="toggleText" />
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="opt total_text on">전문</span><span class="opt summary_text">요약문</span>
+                    </div>
+                    <div class="content on">{{ object.total_text|linebreaks }}</div>
+                    <div class="content ">{{ object.summary_text|linebreaks }}</div>
+                </div>
+                <div id="notearea" class="notearea">
+                    note area
+                </div>
+            </div>
+        </div>
+    </div>

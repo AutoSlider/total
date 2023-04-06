@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% extends 'base2.html' %}
+{% block content %}
+<div id ="logo_div" class="logo">
+    <a href="{% url 'common:login' %}">
+        <img id="logo_img" src="../static/img/logo3.png" class="img-fluid">
+    </a>
+</div>
+<div style="width:500px; margin: 0px auto; position:relative; top:250px">
+    <form method="post" action="{% url 'common:profile_pw' %}">
+        {% csrf_token %}
+        <div>
+        {% if new_password1 != new_password2 %}
+            <div class="text-bg-warning p-3" onclick="비밀번호달라()">"새 비밀번호"와 "새 비밀번호(확인)"이 일치하지 않습니다.</div>
+        {% endif %}
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="old_password">기존 비밀번호</span>
+            <input name="old_password" type="password" class="form-control" aria-label="Username" aria-describedby="basic-addon1" required>
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="new_password1">새 비밀번호</span>
+            <input name="new_password1" type="password" class="form-control" aria-label="new_password1" aria-describedby="basic-addon1" required>
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="new_password2">새 비밀번호(확인)</span>
+            <input name="new_password2" type="password" class="form-control" aria-label="new_password2" aria-describedby="basic-addon1" required>
+        </div>
+            <div id="login_div">
+                <button type="submit" class="btn btn-secondary btn-lg">변경하기</button>
+            </div>
+    </form>
+</div>
+<!-- 푸터 -->
+<div id="footer_div">
+    <hr>
+    <div id="footer_font">
+        <img src="/static/andlogo.jpg" alt="logoimage">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <B style = "font-size:16px">CONTACT US&nbsp;&nbsp;&nbsp;</B>
+        <i class="bi bi-telephone-fill"></i> 전화번호: 02-599-8697 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <i class="bi bi-house-door-fill"></i> 관리자 이메일: autoslider@site.com
+    </div>
+    <br>
+    <p id="footer_Copyright">Copyright ⓒ2023 And.&nbsp;All Rights Reserved.</p>
+</div>
+{% endblock %}
+<script>
+const password = document.getElementById('new_password1');
+const confirm_password = document.getElementById('new_password2');
+
+비밀번호달라() {
+  if (password.value !== confirm_password.value) {
+    alert("'새 비밀번호'와 '새 비밀번호(확인)'이 다릅니다.");
+    return false;
+  }
+});
+</script>
+</body>
+</html>

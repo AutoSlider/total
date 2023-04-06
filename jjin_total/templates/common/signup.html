@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+          rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+          crossorigin="anonymous">
+    <link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <!-- 구글 reCAPTCHA  -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+</head>
+    <body class="p-3 m-0 border-0 bd-example">
+        <form method="post" action="{% url 'common:signup' %}" class=" needs-validation was-validated" novalidate="" name="myform" id="myform">
+            {% csrf_token %}
+
+          <!-- Example Code -->
+         <div class="container-fluid d-flex justify-content-center align-items-center">
+         <div class="row d-flex justify-content-center align-items-center">
+            <!-- 이미지에 대한 정보 -->
+            <div class="col-md-4 text-center" >
+            <a href="{% url 'common:login' %}">
+            <button type="button"  class="btn btn-light ">
+            <img src="../../static/img/logo_1.png" width="120" height="100" ></button></a>
+            </div>
+            <!-- 필수 정보 입력 줄 -->
+                <div class="col-md-12 text-center" style>
+                </div>
+             <!-- 아이디에 대한 정보 --><h4 class ="mb-3" ></h4>
+            <div class="col-md-4"  >
+                <label for="username" class="form-label">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                    </svg>아이디</label>
+                <input type="text" class="form-control is-valid" name="username" id="username" placeholder="아이디 입력"  required="">
+                <div class="valid-feedback"></div>
+            </div >
+            <!-- 비밀번호에 대한 정보 --><h4 class ="mb-3"></h4>
+            <div class="col-md-4" >
+                <label for="password1" class="form-label">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-unlock" viewBox="0 0 16 16">
+                        <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2zM3 8a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1H3z"/>
+                    </svg>비밀번호</label>
+                <input type="password" class="form-control is-valid" name="password1" id="password1" placeholder="비밀번호 입력 최소8자"  required="">
+                <div class="valid-feedback"></div>
+            </div>
+            <!-- 비밀번호 확인에 대한 정보 --><h4 class ="mb-3"></h4>
+            <div class="col-md-4" >
+                <label for="password2" class="form-label">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-unlock" viewBox="0 0 16 16">
+                        <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2zM3 8a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1H3z"/>
+                    </svg>비밀번호 확인</label>
+                <input type="password" class="form-control is-valid" name="password2" id="password2" placeholder="비밀번호 확인 최소8자"  required="">
+                <div class="valid-feedback"></div>
+            </div>
+            <!-- 이메일에 대한 정보 --><h4 class ="mb-3"></h4>
+            <div class="col-md-4" >
+                <label for="email">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope-at-fill" viewBox="0 0 16 16">
+                        <path d="M2 2A2 2 0 0 0 .05 3.555L8 8.414l7.95-4.859A2 2 0 0 0 14 2H2Zm-2 9.8V4.698l5.803 3.546L0 11.801Zm6.761-2.97-6.57 4.026A2 2 0 0 0 2 14h6.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.606-3.446l-.367-.225L8 9.586l-1.239-.757ZM16 9.671V4.697l-5.803 3.546.338.208A4.482 4.482 0 0 1 12.5 8c1.414 0 2.675.652 3.5 1.671Z"/>
+                        <path d="M15.834 12.244c0 1.168-.577 2.025-1.587 2.025-.503 0-1.002-.228-1.12-.648h-.043c-.118.416-.543.643-1.015.643-.77 0-1.259-.542-1.259-1.434v-.529c0-.844.481-1.4 1.26-1.4.585 0 .87.333.953.63h.03v-.568h.905v2.19c0 .272.18.42.411.42.315 0 .639-.415.639-1.39v-.118c0-1.277-.95-2.326-2.484-2.326h-.04c-1.582 0-2.64 1.067-2.64 2.724v.157c0 1.867 1.237 2.654 2.57 2.654h.045c.507 0 .935-.07 1.18-.18v.731c-.219.1-.643.175-1.237.175h-.044C10.438 16 9 14.82 9 12.646v-.214C9 10.36 10.421 9 12.485 9h.035c2.12 0 3.314 1.43 3.314 3.034v.21Zm-4.04.21v.227c0 .586.227.8.581.8.31 0 .564-.17.564-.743v-.367c0-.516-.275-.708-.572-.708-.346 0-.573.245-.573.791Z"/>
+                    </svg>이메일</label>
+                <input type="text" class="form-control is-valid" name="email" id="email" placeholder="이메일 입력 예시:admin@naver.com" required>
+            <div class="input-group mb-3"></div>
+            </div>
+            <!-- 닉네임(별명)에 대한 정보 --><h4 class ="mb-3"></h4>
+            <div class="col-md-4" >
+            <label for="nickname" class="form-label">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                        </svg>닉네임(별명)</label>
+                    <input type="text" class="form-control is-valid" name="nickname" id="nickname" placeholder="닉네임(별명) 입력 예시: 개미" required>
+            <div class="valid-feedback"></div></div>
+            <!-- 전화번호에 대한 정보 --><h4 class ="mb-3"></h4>
+            <div class="col-md-4" >
+            <label for="phone" class="form-label">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/>
+                </svg>전화번호</label>
+            <input type="text" class="form-control is-valid" name="phone" id="phone" placeholder="전화번호 입력 예시:01012345678" required>
+            <div class="valid-feedback"></div></div>
+              <div class="center-left-align">
+            <!-- 회원가입에 동의를할건지 유효성검사--><h4 class ="mb-3"></h4><center>
+            <div class="form-check;" >
+                <p class="center-left-align">
+            <input class="form-check-input" type="checkbox" value="" id="user_dong" name="user_dong">
+            <label class="form-check-label">서비스 이용에 동의 합니다</label>
+            </p></div></center>
+            <!-- 개인 정보에 동의할건지 유효성검사--><h4 class ="mb-3"></h4><center>
+            <div class="form-check;" class="from-label;">
+                <p class="center-left-align">
+            <input class="form-check-input" type="checkbox" value="" id="private_dong" name="private_dong">
+            <label class="form-check-label" >개인 정보에 동의 합니다</label>
+            </p></div></center>
+            <!-- 로봇이 인지 아닌지 확인 인증만료시간 1분 --><h4 class = "mb-3"></h4><center>
+            <div class="g-recaptcha" data-sitekey="6LcgikclAAAAABvN0DzeIZyJdNP3ENld4zI135BP" data-callback="recaptcha"></div>
+            </center></div>
+            <h4 class ="mb-3"></h4>
+            <div class="col-md-12 text-center" >
+                <script src="../../static/test.js"></script>
+            <button type="submit" class="btn btn-primary btn-block col-md-4" id="signup-button" onclick="함수()"> 확인</button>
+            </div>
+
+         <!-- End Example Code -->
+    <!--푸터 적용-->
+            <div id ="footer_div"><center>
+            <hr>
+            <div id="footer_font">
+                <img src="../../static/img/andlogo.jpg" alt="logoimage">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <B style = "font-size:16px">CONTACT US </B>&nbsp;&nbsp;&nbsp;
+                <i class="bi bi-telephone-fill">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16">
+                     <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/>
+                    </svg></i>전화번호: 02-599-8697 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <i class="bi bi-house-door-fill">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope-at-fill" viewBox="0 0 16 16">
+                        <path d="M2 2A2 2 0 0 0 .05 3.555L8 8.414l7.95-4.859A2 2 0 0 0 14 2H2Zm-2 9.8V4.698l5.803 3.546L0 11.801Zm6.761-2.97-6.57 4.026A2 2 0 0 0 2 14h6.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.606-3.446l-.367-.225L8 9.586l-1.239-.757ZM16 9.671V4.697l-5.803 3.546.338.208A4.482 4.482 0 0 1 12.5 8c1.414 0 2.675.652 3.5 1.671Z"/>
+                        <path d="M15.834 12.244c0 1.168-.577 2.025-1.587 2.025-.503 0-1.002-.228-1.12-.648h-.043c-.118.416-.543.643-1.015.643-.77 0-1.259-.542-1.259-1.434v-.529c0-.844.481-1.4 1.26-1.4.585 0 .87.333.953.63h.03v-.568h.905v2.19c0 .272.18.42.411.42.315 0 .639-.415.639-1.39v-.118c0-1.277-.95-2.326-2.484-2.326h-.04c-1.582 0-2.64 1.067-2.64 2.724v.157c0 1.867 1.237 2.654 2.57 2.654h.045c.507 0 .935-.07 1.18-.18v.731c-.219.1-.643.175-1.237.175h-.044C10.438 16 9 14.82 9 12.646v-.214C9 10.36 10.421 9 12.485 9h.035c2.12 0 3.314 1.43 3.314 3.034v.21Zm-4.04.21v.227c0 .586.227.8.581.8.31 0 .564-.17.564-.743v-.367c0-.516-.275-.708-.572-.708-.346 0-.573.245-.573.791Z"/>
+                    </svg></i>관리자 이메일: autoslider@site.com  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="{% url 'common:produce' %}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-android" viewBox="0 0 16 16">
+            <path d="M2.76 3.061a.5.5 0 0 1 .679.2l1.283 2.352A8.94 8.94 0 0 1 8 5a8.94 8.94 0 0 1 3.278.613l1.283-2.352a.5.5 0 1 1 .878.478l-1.252 2.295C14.475 7.266 16 9.477 16 12H0c0-2.523 1.525-4.734 3.813-5.966L2.56 3.74a.5.5 0 0 1 .2-.678ZM5 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm6 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"/>
+            </svg>팀소개</a>
+            </div>
+         <br>
+         <p id="footer_Copyright">Copyright ⓒ2023 And.&nbsp;All Rights Reserved.</p></center>
+            </div>
+             </div>
+         </div>
+    </form>
+
+<script>
+<!--필수 입력란 적도록 알림창 띄우기-->
+    let username = document.querySelector("#username")
+    let password1 = document.querySelector("#password1")
+    let password2 = document.querySelector("#password2")
+    let email = document.querySelector("#email")
+    let nickname = document.querySelector("#nickname")
+    let phone = document.querySelector("#phone")
+
+    function 함수() {
+        if (username.value=='' || password1.value=='' || password2.value=='' || email.value=='' || nickname.value=='' || phone.value=='') {
+            alert("필수 입력란이 비었습니다. 확인해 주세요.")
+        }
+    }
+
+</script>
+</body>
+</html>

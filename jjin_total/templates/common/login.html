@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<style>
+/* 메인페이지 스타일 시트 */
+#logo_div {
+    text-align:center;
+}
+
+#logo_img {
+    position:relative;
+    top:200px;
+    width:200px;
+    height:100px;
+}
+
+#board_div {
+    text-align:center;
+    position:relative;
+    top:200px;
+}
+
+#id_div, #password_div{
+    width:300px;
+    margin:auto;
+    position:relative;
+    top:250px;
+}
+
+#id_span {
+    width:90px;
+}
+
+#login_div {
+    text-align:center;
+}
+
+#login_button {
+    display:inline-block;
+    position:relative;
+    right:70px;
+    top:250px;
+}
+
+#signup_div {
+    text-align:center;
+    position:relative;
+    left:50px;
+    top:2px;
+}
+
+#signup_button {
+    position:relative;
+    top:200px;
+}
+
+#footer_div {
+    position:relative;
+    top:370px;
+}
+
+#footer_font {
+    text-align:center;
+    font-size:12px;
+}
+
+#footer_Copyright {
+    text-align:center;
+}
+
+#init_div {
+    text-align:center;
+    position:relative;
+    top:250px;
+}
+
+</style>
+    <body>
+        {% extends 'base.html' %}
+        {% block content %}
+<!-- 로고 -->
+        <div id ="logo_div" class="logo">
+            <img id="logo_img" src="../static/img/logo3.png" class="img-fluid">
+        </div>
+
+<!-- 아이디, 비밀번호 입력란, 로그인 버튼 -->
+        <form action="{% url 'common:login' %}" method="POST">
+            {% csrf_token %}
+            {% include "form_errors.html" %}
+            <div id="id_div" class="input-group mb-3">
+                <span id="id_span" class="input-group-text">아이디</span>
+                <input type="text" name="username" class="form-control" placeholder="Username" required>
+            </div>
+            <div id="password_div" class="input-group mb-3">
+                <span class="input-group-text">비밀번호</span>
+                <input type="password"  name="password" class="form-control" placeholder="password" required>
+            </div>
+            {% if user.is_authenticated %}
+            {% else %}
+            <div id="login_div">
+                <button id="login_button"type="submit" class="btn btn-secondary btn-lg">로그인</button>
+            </div>
+            {% endif %}
+        </form>
+
+<!-- 회원가입 버튼 -->
+        {% if user.is_authenticated %}
+        {% else %}
+        <div id="signup_div">
+            <a href="{% url 'common:signup' %}">
+                <button id="signup_button" type="submit" class="btn btn-secondary btn-lg">회원가입</button>
+            </a>
+        </div>
+        {% endif %}
+
+<!-- 시작하기 버튼 -->
+        {% if user.is_authenticated %}
+        <div id="init_div">
+            <a href="{% url 'boards:board_list' %}">
+                <button id="init_button" type="submit" class="btn btn-secondary btn-lg">시작하기</button>
+            </a>
+        </div>
+        {% endif %}
+
+        {% include 'footer.html' %}
+        {% endblock %}
+</body>
+</html>
+

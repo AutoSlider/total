@@ -17,29 +17,9 @@ from django.contrib import admin
 from django.urls import path, include
 
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('common.urls', 'common')), # '/' 에 해당되는 path
     path('', include('boards.urls', 'boards')),
 ]
-
-# from django.contrib import admin
-# from django.urls import path, include
-# from django.conf import settings
-# from django.conf.urls.static import static
-# from django.views.generic.base import TemplateView
-# from common import views
-
-# urlpatterns = [
-#     path('admin/', admin.site.urls),
-#     # path('', views.IndexView.as_view(), name='index'),  # '/' 에 해당되는 path
-#     # path('common/', include(('common.urls', 'common'))),
-#     # path('common/', include('django.contrib.auth.urls')),
-#     # path('care/', include('care.urls')), # 요양원&리뷰
-#     path('', include(('common.urls', 'common'))),
-#     path('common/', include('django.contrib.auth.urls')),
-#     path('care/', include('care.urls')), # 요양원&리뷰
-#     path('care/', include('django.contrib.auth.urls')),
-# ]
 

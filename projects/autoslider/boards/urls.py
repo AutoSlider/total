@@ -2,7 +2,6 @@ from django.urls import path, include
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
-from markdownx import urls as markdownx
 
 app_name = 'boards'
 
@@ -12,9 +11,7 @@ urlpatterns = [
     path('new/', views.BoardCreateView.as_view(), name='board_create'),
     path('<int:pk>/', views.BoardDetailView.as_view(), name='board_detail'),
     path('<int:pk>/modifav', views.modifiy_favorite, name='modifiy_favorite'),
-    path('markdownx/', include('markdownx.urls')),
-    # path('<int:pk>/update/', views.BoardUpdateView.as_view(), name='board_update'),
-    # path('<int:pk>/delete/', views.BoardDeleteView.as_view(), name='board_delete'),
+    path('<int:pk>/update/', views.BoardUpdateView.as_view(), name='board_update'),
 ]
 
 if settings.DEBUG:

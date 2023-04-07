@@ -1,6 +1,5 @@
 from django import forms
 from .models import Board
-# from markdownx.fields import MarkdownxFormField
 
 class BoardCreateForm(forms.ModelForm):
     class Meta:
@@ -14,11 +13,11 @@ class BoardCreateForm(forms.ModelForm):
             'input_video': forms.ClearableFileInput(attrs={'id': 'input_video'}),
         }
 
-# class BoardNoteForm(forms.ModelForm):
-#     class Meta:
-#         model = Board
-#         # note = MarkdownxFormField()
-#         fields = ['note']
-#         # widgets = {
-#         #     'note': forms.Textarea(attrs={'id': 'user_note'}),
-#         # }
+
+class BoardUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Board
+        fields = ['note']
+        widgets = {
+            'note' : forms.Textarea(attrs={'id' : 'note_form'})
+        }

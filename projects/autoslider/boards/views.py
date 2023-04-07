@@ -2,7 +2,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
-from django.views.generic import ListView, DetailView, CreateView, View
+from django.views.generic import ListView, DetailView, CreateView, View, UpdateView
 from django.http import JsonResponse, HttpResponseForbidden, HttpResponseRedirect
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
@@ -11,7 +11,7 @@ from django.conf import settings
 from django.db.models import Q
 
 from .models import Board
-from .forms import BoardCreateForm# , BoardNoteForm
+from .forms import BoardCreateForm, BoardUpdateForm
 
 import os
 import json
@@ -41,8 +41,6 @@ class BoardListView(LoginRequiredMixin, ListView):
     # paginate_by = 10
 
     def get_queryset(self):
-        # Filter the queryset to include only boards created by the current user
-        # return Board.objects.filter(user_id=self.request.user.id)
         query = self.request.GET.get('q')
         if query:
             return Board.objects.filter(
@@ -107,7 +105,6 @@ def modifiy_favorite(request, pk):
     return HttpResponseRedirect(reverse('boards:board_detail', args=[pk]))
 
 
-
 # 상세 보드
 class BoardDetailView(LoginRequiredMixin, DetailView):
     model = Board
@@ -129,12 +126,6 @@ class BoardDetailView(LoginRequiredMixin, DetailView):
     def get_success_url(self):
         return reverse('boards:board_detail', kwargs={'pk': self.object.pk})
 
-# 보드 수정
-# def post_form(request, board_id):
-#     board = get_object_or_404(Board, pk=board_id)
-#     note, created = Note.objects.get_or_create(board=board)
-#     context = {'board': board, 'note': note}
-#     return render(request, 'notes/post_form.html', context)
 
 # 보드 삭제
 class BoardDeleteView(LoginRequiredMixin, View):
@@ -145,6 +136,21 @@ class BoardDeleteView(LoginRequiredMixin, View):
         return redirect('boards:board_list')
 
 
+# 노트 생성 & 보드 업데이트
+class BoardUpdateView(LoginRequiredMixin, UpdateView):
+    model = Board
+    form_class = BoardUpdateForm
+    template_name = 'boards/board_detail.html'
+    print('BoardUpdateView raise')
+    def form_valid(self, form):
+        board = form.save(commit=False)
+        board.note = form.cleaned_data['note']
+        print('note :',form.cleaned_data['note'])
+        board.save()
+
+        return redirect('boards:board_list')
+        # redirect('boards:board_detail', pk=board.id)
+                # redirect('boards:board_list')
 
 
 # 영상 업로드 & youtube 다운 & 긴 텍스트 요약 처리
@@ -245,6 +251,7 @@ def youtube_url_validation(url):
         return youtube_regex_match[0][-1]
 
 
+
 # 요약 종합 & 보드 생성
 class BoardCreateView(LoginRequiredMixin, CreateView):
     model = Board
@@ -253,8 +260,8 @@ class BoardCreateView(LoginRequiredMixin, CreateView):
 
 
     def form_valid(self, form):
-        logger.info('BoardCreateForm form_valid called!')
-        logger.debug('Debugging information')
+        # logger.info('BoardCreateForm form_valid called!')
+        # logger.debug('Debugging information')
 
         board = form.save(commit=False)
         form.instance.user_id = self.request.user
@@ -265,15 +272,18 @@ class BoardCreateView(LoginRequiredMixin, CreateView):
             board.total_text = input_text
             board.summary_text = summarize_long_text(input_text)
             board.timeline_text = ""
+            board.note = "# Markdown 문서 시작"
+            # Create Note instance
+            # board.note_id = Note.objects.create(user_id=self.request.user, content="# Markdown 문서 시작")
+
             board.save()
-            # Define the URL to redirect to
+
             redirect_url = reverse('boards:board_detail', args=[board.id])
             return redirect(redirect_url)
 
         # Handle YouTube links
         input_youtube = form.cleaned_data['input_youtube']
         if input_youtube:
-            print(f'\n\nform.cleaned_data["input_youtube"] -> input_youtube : {input_youtube} Success!!\n\n')
             # 동영상 다운로드를 위한 경로 설정
             VIDEO_DIR = os.path.join(settings.MEDIA_ROOT, 'youtube/')
             if not os.path.exists(VIDEO_DIR):
@@ -300,6 +310,7 @@ class BoardCreateView(LoginRequiredMixin, CreateView):
             board.summary_text = summarize_long_text(original_text)
             board.timeline_text = create_timelined_text(segments)
             board.total_text = original_text
+            board.note = "# Markdown 문서 시작"
 
             board.save()
 
@@ -325,8 +336,9 @@ class BoardCreateView(LoginRequiredMixin, CreateView):
             board.summary_text = summarize_long_text(result["text"])
             board.timeline_text = create_timelined_text(segments)
             board.input_video = input_video # 업로드한 파일
+            board.note = "# Markdown 문서 시작"
+
             board.save()
-            print('input_video board save')
 
             # 업로드 된 파일 삭제
             default_storage.delete(file_path)
@@ -335,7 +347,6 @@ class BoardCreateView(LoginRequiredMixin, CreateView):
             return redirect(redirect_url)
 
         success_url = reverse('boards:board_list')
-        # logger.info(f'Redirecting to success_url -> {success_url}')
         return super().form_valid(form)
 
     def get_success_url(self):

@@ -195,14 +195,27 @@
 </div>
 <!-- Modal popup JavaScript -->
 <script type="text/javascript" >
+
   // Progess Animation
+  /*
   function progrssStart(){
     alert('progrssStart raise');
     $("body").attr("class","progress");
     $(".loading-container").addClass("on");
 
   }
-  $("#modalSubmit").on("click", progrssStart);
+  */
+  // modal이 나타날 때
+  $('#myModal').on('shown.bs.modal', function () {
+    // progress circle 요소 생성
+    var $circle = $('<div>').addClass('loading-container');
+    $(".loading-container").innerHTML=`<div class="loading"></div><div id="loading-text">진행 중!</div>`;
+
+    // 모달 내부에 요소 추가
+    $('.modal-body').append($circle);
+    });
+  $('form').submit(function () {$('.loading-container').show();});
+  // $("#modalSubmit").on("click", (event)=>{$('.progress-circle').show();});
   function showNewBoardModal() {
     var newBoardForm = $("#newBoardForm");
     //console.log("showNewBoardModal() raise!");

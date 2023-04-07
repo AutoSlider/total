@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'common',
     'boards.apps.BoardsConfig', # boards
     'bootstrap4', # bootstrap4
-    'markdownx', # markdown
 ]
 
 MIDDLEWARE = [
@@ -129,10 +128,13 @@ USE_TZ = True
 # STATIC_URL = 'static/'
 
 # STATIC FILES
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+# STATIC_ROOT = BASE_DIR / 'static'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',  # static 안에 일괄 파일 처리 시
 ]
+# python manage.py collectstatic 명령어 사용 시 STATIC_ROOT 와 STATICFILES_DIRS 중복이므로 STATICFILES_DIRS 주석처리 
+
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
@@ -164,7 +166,6 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # MEDIA_URL은 파일이 서비스될 URL을 설정하는데 사용됨.
 # autoslider 바로 아래에 생성함.
 
-
 # Error log 확인
 LOGGING = {
     'version': 1,
@@ -181,5 +182,4 @@ LOGGING = {
         },
     },
 }
-
 

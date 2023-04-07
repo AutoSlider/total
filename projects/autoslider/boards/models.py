@@ -4,12 +4,9 @@ from common.models import CustomUser
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from markdownx.models import MarkdownxField
-
 TIME_ZONE = 'Asia/Seoul'
 
 # Create your models here.
-
 class Board(models.Model):
     input_type_choices = [
         ('input_text', '텍스트 요약'),
@@ -25,6 +22,7 @@ class Board(models.Model):
     summary_text = models.TextField(blank=True, null=True)
     timeline_text = models.TextField(blank=True, null=True)
     user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    note = models.TextField(blank=True, null=True)
     favorite = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -39,19 +37,3 @@ class Board(models.Model):
     def __str__(self):
         return f'id={self.id} / user = {self.user_id.username} : {self.title}'
 
-# Create your models here.
-class Note(models.Model):
-    title = models.CharField(max_length=200, blank=True)
-    content = MarkdownxField()
-    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    board = models.OneToOneField(Board, on_delete=models.CASCADE)
-
-    def save(self, *args, **kwargs):
-        if (not self.title.strip()) or (self.title == "") or (self.title is None) : # 제목이 없는 경우에만 생성 날짜를 저장
-            now = timezone.now()
-            formatted_time = now.strftime('%Y-%m-%d %H:%M')
-            self.title = formatted_time # str(self.created_at)
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return f'id={self.id} / user = {self.user_id.username} : {self.title}'

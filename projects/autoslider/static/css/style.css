@@ -152,9 +152,25 @@ table{
     height: 100px;
     background-color: #E0E0E0;
 }
+.board_detail .toparea h1.logo {
+    position: absolute;
+    top: 0;
+    left:0 ;
+}
+.board_detail .toparea h1.logo a {
+    display: block;
+    width: 100px;
+}
+.board_detail .toparea h1.logo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
 .board_detail .toparea h3.tit {
     line-height: 100px;
     text-align: center;
+    font-size: 20px;
+    font-weight: bold;
 }
 .board_detail .toparea ul {
     position: absolute;
@@ -176,6 +192,19 @@ table{
     width: 102px;
     font-size: 12px;
     padding: 5px;
+}
+
+#player {width:100%}
+
+#timeline h3 {
+    font-size: 17px;
+    font-weight: bold;
+}
+#timeline .TL_section {
+    overflow-y: scroll;
+    height: 500px;
+    padding: 15px;
+    background: #aaa;
 }
 
    /* 토글 버튼 */
@@ -258,6 +287,10 @@ display: inline-block;
     float: none;
     width: 100%;
     padding: 40px 0 0 ;
+}
+.detail_content h4 {
+    margin-bottom: 40px;
+    text-align: center;
 }
 
 .detail_content .videoSection {
@@ -388,7 +421,7 @@ display: inline-block;
 }
 
 /* profile.html */
-.profile {}
+
 
 .profile h1.logo {
     width: 100%;
@@ -407,7 +440,6 @@ display: inline-block;
 .profile_content {
     position:relative;
     width: 500px;
-    margin: 0 auto;
     text-align:center;
 }
 
@@ -415,74 +447,57 @@ display: inline-block;
     width:155px;
 }
 
-/* footer.html */
-/*
-.footer_div {}
-
-.footer_div h1.logo {}
-*/
-
-/* base.html - footer */
-/* .footer {
-    clear: both;
-    overflow: hidden;
+/* */
+#logo_div {
     position: relative;
-    width: 100%;
-    padding: 10px;
-    border-top: 1px solid #000;
+    top: 200px;
 }
-
-.footer .rights {
-    z-index:0;
+#logo_div img {
+    width: 150px;
 }
-.footer .logo {
-    width: 50px;
-    margin:0 auto -30px;
-}
-
-.footer .logo img {
-    display: block;
-    width:100%;
-}
-
-.footer .rows {
-    clear: both;
-    float: none;
-    overflow: hidden;
+.login_form {
     position: relative;
-    width: 100%;
-    font-size: 10px;
+    top: 250px;
 }
-.footer .rows ul {
-    float: left;
-    width: 250px;
-    z-index:10;
-}
-.footer .rows ul li {
-    display: block;
-    margin-bottom: 5px;
-    text-align: left;
+.login_form .input-group {
+    width: 300px;
+    margin: auto;
 }
 
-.footer .rows ul li strong {
-    padding-right: 5px;
+.loginBtn {
+    position: absolute;
+    top: 15px;
+    margin-left: 170px;
 }
-.footer .rows ul li a img {
-    display: block;
-    width: 20px;
-}
-.footer .rows .links li {
-    display: inline-block;
-    margin: 0 auto;
-    width: 55px;
-} */
 
-/* signup.html, login.html */
-.userform h1 {margin: 0 0 20px 0;}
-.userform {margin: 30px 0;}
-.userform .userform_label {
-    margin-bottom: 10px;
+.signupBtn {
+    position: relative;
+    top: 255px;
 }
+
+/* footer */
+#footer_div {
+    position:relative;
+    top:250px;
+    padding: 20px 0 40px;
+    border-top: 1px solid #626262;
+}
+
+#footer_font {
+    text-align:center;
+    font-size:12px;
+}
+
+#footer_Copyright {
+    text-align:center;
+}
+
+#init_div {
+    text-align:center;
+    position:relative;
+    top:200px;
+}
+
 
 /* 진행 중 애니메이션 */
 #link {color: #E45635;display:block;font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif;text-align:center; text-decoration: none;}
@@ -622,4 +637,18 @@ body.progress {background: #333333;}
     width: 100px;
 }
 
+/* markdown */
+#notearea {
+    height: 500px;
+}
+
+#markdown_area {
+    width: 100%;
+    height: 100%;
+    padding: 15px;
+}
+
+#markdown_backup, #save_markdown {
+    display: none;
+}
 

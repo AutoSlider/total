@@ -1,7 +1,7 @@
 # 통합본
 
 - AutoSlider의 전체 통합된 파일 입니다.
-![AutoSilder](https://user-images.githubusercontent.com/102719063/225289570-0a4aae52-a55b-4877-8907-fad34d383159.png)
+!![AutoSlider](https://user-images.githubusercontent.com/102719063/230900543-00d26481-3fac-4a2a-bde9-a7c3306033ff.png)
 - AutoSlider 프로젝트는 점프 투 장고(https://wikidocs.net/book/4223) 의 환경 설정을 기반으로 진행하여, venvs과 projects 라는 디렉토리로 분류하였고, venvs의 `pip`의 목록은 에서 확인하실 수 있습니다.
 - requirements.txt : `pip` 단으로 필요한 버전에 대해서.
     - 다만 내용 중에서
